@@ -1,0 +1,31 @@
+{ pkgs }: {
+  deps = [
+    # Node.js dependencies
+    pkgs.python39Packages.pip
+                               pkgs.nodejs-18_x
+    pkgs.nodePackages.typescript-language-server
+    pkgs.yarn
+    pkgs.replitPackages.jest
+    # Python dependencies
+    pkgs.python310
+    pkgs.strace
+    pkgs.replitPackages.prybar-python310
+    pkgs.replitPackages.stderred
+    # Additional dependencies
+    pkgs.zlib
+    pkgs.glib
+    pkgs.xorg.libX11
+  ];
+  env = {
+    PYTHON_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
+      pkgs.stdenv.cc.cc.lib
+      pkgs.zlib
+      pkgs.glib
+      pkgs.xorg.libX11
+    ];
+    PYTHONBIN = "${pkgs.python310}/bin/python3.10";
+    LANG = "en_US.UTF-8";
+    STDERREDBIN = "${pkgs.replitPackages.stderred}/bin/stderred";
+    PRYBAR_PYTHON_BIN = "${pkgs.replitPackages.prybar-python310}/bin/prybar-python310";
+  };
+}

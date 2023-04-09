@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mentor Hand - ChatBOT - Personalizado</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="header">
+    <h1>Mentor Hand - ChatBOT - Personalizado</h1>
+  </div>  
+  <div class="container">
+    <div class="form-container">
+      <form id="question-form">
+        <label for="openAIApiKey">OpenAI API Key:</label>
+        <input type="text" id="openAIApiKey" name="openAIApiKey" required><br>
+        <label for="question">Qual é sua dúvida?</label>
+        <input type="text" id="question" name="question" required>
+        <button type="submit" id="submit">Procurar</button>
+      </form>
+    </div>
+    <div class="answer-container">
+      <div id="answer"></div>
+    </div>
+  </div>
+
+<script>
+  const form = document.getElementById('question-form');
+  const answerDiv = document.getElementById('answer');
+  const submitBtn = document.querySelector('button[type=submit]');
+  
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(form);
+    submitBtn.textContent = 'Loading...';
+    submitBtn.setAttribute('disabled', 'true');
+    answerDiv.textContent = "";
+    const response = await fetch('/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(formData.entries()))
+    });
+    const data = await response.json();
+    if (data.answer) {
+      answerDiv.textContent = data.answer;
+    } else {
+      answerDiv.textContent = "No answer found";
+    }
+    submitBtn.textContent = 'Procurar';
+    submitBtn.removeAttribute('disabled');
+    
+  });
+</script>
+</body>
+</html>
